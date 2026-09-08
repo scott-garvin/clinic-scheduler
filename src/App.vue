@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import StaffBoard from './components/StaffBoard.vue';
 import KioskFlow from './components/KioskFlow.vue';
+import ToastHost from './components/ToastHost.vue';
 
 const mode = ref<'staff' | 'kiosk'>('staff');
 </script>
@@ -22,6 +23,7 @@ const mode = ref<'staff' | 'kiosk'>('staff');
     </main>
 
     <footer class="foot">Demonstration · sample data only · no real patient data</footer>
+    <ToastHost />
   </div>
 </template>
 

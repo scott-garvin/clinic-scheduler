@@ -4,7 +4,7 @@ A clinic check-in system with **two connected surfaces** — a staff board and a
 
 Vue 3 + TypeScript + Vite.
 
-- **Staff board** — a live front-desk monitor of today's schedule: check-in time, patient, appointment time, provider, location, visit type, insurance, copay, and status (scheduled → checked-in → roomed → completed / no-show), with filters and inline status changes.
+- **Staff board** — a working front-desk data grid over the day's schedule (~34 sample appointments): live **search** (name / provider / insurer / MRN / phone, `/` to focus), provider + status filters, **sortable columns**, and **pagination** with a page-size selector. Click any row for a **patient slide-over** — full demographics, insurance/copay, a visit **timeline**, and quick status actions. A validated **New appointment** modal adds to the board, and **Export CSV** downloads the current view. Every status change and check-in toasts and updates live.
 - **Patient kiosk** — the touch-first flow a patient walks through on arrival: welcome → find your appointment (last name + date of birth) → confirm it's you → review contact, insurance & copay → consent → checked in. Big targets, one task per screen, a progress stepper.
 
 They're **connected**: check a patient in on the kiosk and they flip to *checked-in* on the staff board. Sample data only, no backend, no real patient data. On the kiosk's find screen, tap a demo patient to fill the form and walk the flow.
