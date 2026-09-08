@@ -1,113 +1,111 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import { type Appointment, checkIn } from './store';
-import Stepper from './components/Stepper.vue';
-import Welcome from './components/Welcome.vue';
-import Find from './components/Find.vue';
-import Confirm from './components/Confirm.vue';
-import Review from './components/Review.vue';
-import Consent from './components/Consent.vue';
-import Done from './components/Done.vue';
+import { ref } from 'vue';
+import StaffBoard from './components/StaffBoard.vue';
+import KioskFlow from './components/KioskFlow.vue';
 
-type Step = 'welcome' | 'find' | 'confirm' | 'review' | 'consent' | 'done';
-
-const step = ref<Step>('welcome');
-const appt = ref<Appointment | null>(null);
-
-const middleSteps: Step[] = ['find', 'confirm', 'review', 'consent'];
-const showStepper = computed(() => middleSteps.includes(step.value));
-const stepIndex = computed(() => middleSteps.indexOf(step.value) + 1); // 1..4
-
-function found(a: Appointment) {
-  appt.value = a;
-  step.value = 'confirm';
-}
-function complete() {
-  if (appt.value) checkIn(appt.value.id);
-  step.value = 'done';
-}
-function restart() {
-  appt.value = null;
-  step.value = 'welcome';
-}
+const mode = ref<'staff' | 'kiosk'>('staff');
 </script>
 
 <template>
-  <div class="kiosk">
-    <header class="khead">
-      <div class="clinic"><span class="mark">✚</span> Riverside Family Health</div>
-      <div class="tag">Self check-in</div>
+  <div class="app">
+    <header class="appbar">
+      <div class="brand"><span class="mark">✚</span> Riverside Family Health</div>
+      <div class="seg" role="tablist">
+        <button role="tab" :class="{ on: mode === 'staff' }" @click="mode = 'staff'">Staff board</button>
+        <button role="tab" :class="{ on: mode === 'kiosk' }" @click="mode = 'kiosk'">Patient kiosk</button>
+      </div>
     </header>
 
-    <Stepper v-if="showStepper" :current="stepIndex" />
-
-    <main class="stage">
-      <Welcome v-if="step === 'welcome'" @start="step = 'find'" />
-      <Find v-else-if="step === 'find'" @found="found" @cancel="restart" />
-      <Confirm v-else-if="step === 'confirm' && appt" :appt="appt" @yes="step = 'review'" @no="step = 'find'" />
-      <Review v-else-if="step === 'review' && appt" :appt="appt" @ok="step = 'consent'" @back="step = 'confirm'" />
-      <Consent v-else-if="step === 'consent'" @agree="complete" @back="step = 'review'" />
-      <Done v-else-if="step === 'done' && appt" :appt="appt" @restart="restart" />
+    <main class="content" :class="mode">
+      <StaffBoard v-if="mode === 'staff'" />
+      <KioskFlow v-else />
     </main>
 
-    <footer class="kfoot">Demonstration kiosk · sample patients only · no real data is collected</footer>
+    <footer class="foot">Demonstration · sample data only · no real patient data</footer>
   </div>
 </template>
 
 <style scoped>
-.kiosk {
+.app {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 28px 20px 40px;
 }
-.khead {
-  width: 100%;
-  max-width: 620px;
+.appbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 26px;
+  gap: 12px;
+  padding: 14px 24px;
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
-.clinic {
+.brand {
   display: flex;
   align-items: center;
   gap: 10px;
   font-weight: 800;
-  font-size: 18px;
+  font-size: 17px;
   letter-spacing: -0.01em;
 }
 .mark {
   display: grid;
   place-items: center;
-  width: 30px;
-  height: 30px;
-  border-radius: 9px;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
   background: var(--accent);
   color: #fff;
-  font-size: 15px;
+  font-size: 14px;
 }
-.tag {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--muted);
-  background: #fff;
-  border: 1px solid var(--border);
-  padding: 5px 12px;
-  border-radius: 999px;
-}
-.stage {
-  width: 100%;
-  max-width: 620px;
-  flex: 1;
+.seg {
   display: flex;
-  align-items: flex-start;
+  background: var(--accent-soft);
+  border-radius: 11px;
+  padding: 3px;
 }
-.kfoot {
-  margin-top: 28px;
-  font-size: 12.5px;
-  color: var(--faint);
+.seg button {
+  border: none;
+  background: none;
+  font: inherit;
+  font-weight: 700;
+  font-size: 13.5px;
+  color: var(--accent-ink);
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.seg button.on {
+  background: #fff;
+  color: var(--ink);
+  box-shadow: 0 1px 2px rgba(20, 32, 60, 0.12);
+}
+.content {
+  flex: 1;
+  min-width: 0;
+  padding: 24px;
+  overflow-x: hidden;
+}
+.content.kiosk {
+  padding: 26px 20px 40px;
+}
+.foot {
   text-align: center;
+  font-size: 12px;
+  color: var(--faint);
+  padding: 16px;
+}
+@media (max-width: 560px) {
+  .appbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .content {
+    padding: 18px;
+  }
 }
 </style>

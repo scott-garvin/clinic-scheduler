@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { type Appointment } from '../store';
+import { formatMoney, type Appointment } from '../store';
 
 defineProps<{ appt: Appointment }>();
 defineEmits<{ (e: 'ok'): void; (e: 'back'): void }>();
@@ -23,6 +23,7 @@ const flagged = ref(false);
         <div class="title">Insurance</div>
         <div class="row"><span class="k">Plan</span><span class="v">{{ appt.insurer }}</span></div>
         <div class="row"><span class="k">Member ID</span><span class="v">{{ appt.memberId }}</span></div>
+        <div class="row"><span class="k">Copay due at visit</span><span class="v">{{ formatMoney(appt.copayCents) }}</span></div>
       </div>
     </div>
 

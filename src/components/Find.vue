@@ -7,7 +7,7 @@ const emit = defineEmits<{ (e: 'found', a: Appointment): void; (e: 'cancel'): vo
 const lastName = ref('');
 const dob = ref('');
 const error = ref('');
-const samples = appointments.slice(0, 3);
+const samples = appointments.filter((a) => a.status === 'scheduled').slice(0, 3);
 
 function submit() {
   const a = findAppointment(lastName.value, dob.value);
@@ -15,7 +15,7 @@ function submit() {
     error.value = "We couldn't find an appointment with that name and date of birth. Please check with the front desk.";
     return;
   }
-  if (a.checkedIn) {
+  if (a.status !== 'scheduled') {
     error.value = `${a.firstName} is already checked in.`;
     return;
   }
