@@ -1,0 +1,29 @@
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: clera
+      POSTGRES_USER: clera
+      POSTGRES_PASSWORD: local-demo-only
+    ports: ["127.0.0.1:5445:5432"]
+    volumes: ["clera-data:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U clera"]
+      interval: 3s
+      retries: 15
+  app:
+    build: .
+    environment:
+      DATABASE_URL: postgresql://clera:local-demo-only@db:5432/clera
+      DEMO_ACCESS_KEY: ${DEMO_ACCESS_KEY:-local-clera-demo-access-only}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4.1-mini-2025-04-14}
+      MAX_AI_DAILY: ${MAX_AI_DAILY:-60}
+      MAX_AI_MONTHLY: ${MAX_AI_MONTHLY:-600}
+      PORT: 8085
+      NODE_ENV: development
+    ports: ["127.0.0.1:8085:8085"]
+    depends_on:
+      db: { condition: service_healthy }
+volumes:
+  clera-data:

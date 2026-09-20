@@ -1,6 +1,6 @@
-import { reactive } from 'vue';
+import { reactive } from "vue";
 
-export type ToastKind = 'success' | 'error' | 'info';
+export type ToastKind = "success" | "error" | "info";
 export interface Toast {
   id: number;
   msg: string;
@@ -10,7 +10,7 @@ export interface Toast {
 export const toasts = reactive<Toast[]>([]);
 let seq = 0;
 
-export function toast(msg: string, kind: ToastKind = 'success'): void {
+export function toast(msg: string, kind: ToastKind = "success"): void {
   const id = ++seq;
   toasts.push({ id, msg, kind });
   setTimeout(() => remove(id), 3400);
