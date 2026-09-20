@@ -193,3 +193,5 @@ For a shared database, use a dedicated `clera_app` schema and a restricted login
 Supabase connections should use `sslmode=verify-full` and `sslrootcert=server/certs/supabase-ca.crt` in the database URL. The included certificate is Supabase's public root certificate, copied from the existing portfolio deployment. It contains no private key. The Docker image includes it at that path.
 
 Required runtime variables are `DATABASE_URL` and `DEMO_ACCESS_KEY`. Set `OPENAI_API_KEY` to enable the live assistants, plus `OPENAI_MODEL`, `MAX_AI_DAILY`, and `MAX_AI_MONTHLY` to control model choice and request allowances. The hosting platform supplies `PORT`; the Docker image sets `NODE_ENV=production` for secure cookies. The demo access key is separate from the OpenAI key.
+
+Railway tracks the `main` branch through the Railway GitHub App. Include `scott-garvin/clinic-scheduler` in its selected repositories, connect the production environment to `main`, and enable automatic deployment with Wait for CI. After a release, verify the deployed commit and `/api/health`. Database migrations remain an explicit release step.
