@@ -25,10 +25,8 @@ export function sourceFromEnv(env: NodeJS.ProcessEnv): Source {
   const base = env.MCP_API_URL || "https://clera-production.up.railway.app";
   // Fixed origins prevent accidental credential forwarding to arbitrary destinations.
   if (
-    ![
-      "https://clera-production.up.railway.app",
-      "http://127.0.0.1:8085",
-    ].includes(base)
+    base !== "https://clera-production.up.railway.app" &&
+    base !== "http://127.0.0.1:8085"
   )
     throw Error("MCP_API_URL must be the documented demo origin.");
   if (!env.MCP_DEMO_ACCESS_KEY || env.MCP_DEMO_ACCESS_KEY.length < 24)

@@ -199,3 +199,23 @@ it("keeps anonymous help requests scoped and does not invent appointment links",
     ).requests,
   ).toHaveLength(0);
 });
+
+it("rejects deceptive URLs rather than trusting a host substring", () => {
+  for (const url of [
+    "https://allowed.example.attacker.test",
+    "https://attacker.test/https://allowed.example",
+    "https://allowed.example@attacker.test",
+    "https://allowed.example/?redirect=attacker",
+  ]) {
+    expect(() =>
+      sourceFromEnv({
+        MCP_MODE: "live",
+        MCP_API_URL: url.replaceAll(
+          "https://allowed.example",
+          "https://clera-production.up.railway.app",
+        ),
+        MCP_DEMO_ACCESS_KEY: "k".repeat(32),
+      }),
+    ).toThrow();
+  }
+});
