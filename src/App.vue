@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
+const liveDemoUrl = import.meta.env.VITE_LIVE_DEMO_URL as string | undefined;
 import {
   CalendarDays,
   Users,
@@ -754,7 +755,16 @@ const basePath = import.meta.env.BASE_URL;
         A demo access key connects to the backend and enables real AI tool
         calls. Your OpenAI API key belongs on the server, never in this form.
       </p>
-      <form v-if="workspace.mode === 'sample'" @submit.prevent="unlock">
+      <div v-if="liveDemoUrl" class="callout">
+        <p>
+          This page is the browser-only sample. Open the hosted demo to use your
+          invitation key and live AI.
+        </p>
+        <a class="button primary full" :href="liveDemoUrl"
+          >Open live Clera demo</a
+        >
+      </div>
+      <form v-else-if="workspace.mode === 'sample'" @submit.prevent="unlock">
         <label
           >Demo access key<input
             v-model="key"

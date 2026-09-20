@@ -1,5 +1,7 @@
 # Clera
 
+[Open the live demo](https://clera-production.up.railway.app/) or [try the browser-only sample](https://scott-garvin.github.io/clinic-scheduler/). The live demo uses a Clera invitation key for private workspaces and AI. The sample works without a key.
+
 Clera is a fictional clinic operations demo. It covers booking, rescheduling, cancellation, patient check-in, visit status, and an AI scheduling assistant. The assistant can look up records and propose a change. A person must review and approve that change before it reaches the schedule.
 
 The frontend is Vue 3 and TypeScript. The backend is Express with PostgreSQL. OpenAI's Responses API supplies function calls. Scheduling rules live in shared TypeScript and run again on the server when a proposal is approved.

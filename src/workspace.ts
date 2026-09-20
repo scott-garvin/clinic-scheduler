@@ -82,28 +82,38 @@ export async function run(action: () => Promise<void>) {
   }
 }
 export async function execute(command: Command) {
-  workspace.data =
-    workspace.mode === "sample"
-      ? apply(toRaw(workspace.data), command)
-      : workspaceSchema.parse(
-          await request("commands", {
-            version: workspace.data.version,
-            command,
-          }),
-        );
+  if (workspace.mode === "live") {
+    const key = workspace.key;
+    const updated = workspaceSchema.parse(
+      await request(
+        "commands",
+        {
+          version: workspace.data.version,
+          command,
+        },
+        key,
+      ),
+    );
+    // A disconnected or replaced session must not receive a delayed response.
+    if (workspace.mode !== "live" || workspace.key !== key) return;
+    workspace.data = updated;
+    if (command.type === "reset") workspace.helpRequests = [];
+    return;
+  }
+  const updated = apply(toRaw(workspace.data), command);
+  workspace.data = updated;
   if (command.type === "reset") {
     workspace.helpRequests = [];
     try {
       sessionStorage.removeItem(helpCache);
     } catch {}
   }
-  if (workspace.mode === "sample")
-    try {
-      sessionStorage.setItem(cache, JSON.stringify(workspace.data));
-    } catch {
-      workspace.notice =
-        "Browser storage is unavailable. Changes last until reload.";
-    }
+  try {
+    sessionStorage.setItem(cache, JSON.stringify(updated));
+  } catch {
+    workspace.notice =
+      "Browser storage is unavailable. Changes last until reload.";
+  }
 }
 export async function connect(key: string) {
   if (key.startsWith("sk-"))
