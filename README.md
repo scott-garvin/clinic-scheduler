@@ -195,3 +195,7 @@ Supabase connections should use `sslmode=verify-full` and `sslrootcert=server/ce
 Required runtime variables are `DATABASE_URL` and `DEMO_ACCESS_KEY`. Set `OPENAI_API_KEY` to enable the live assistants, plus `OPENAI_MODEL`, `MAX_AI_DAILY`, and `MAX_AI_MONTHLY` to control model choice and request allowances. The hosting platform supplies `PORT`; the Docker image sets `NODE_ENV=production` for secure cookies. The demo access key is separate from the OpenAI key.
 
 Railway tracks the `main` branch through the Railway GitHub App. Include `scott-garvin/clinic-scheduler` in its selected repositories, connect the production environment to `main`, and enable automatic deployment with Wait for CI. After a release, verify the deployed commit and `/api/health`. Database migrations remain an explicit release step.
+
+## External assistant integration
+
+The [read-only MCP integration](mcp/README.md) exposes appointment status and front-desk assistance requests. Run `npm run mcp:demo` for a real MCP client/server exchange using fictional data, with no model key required. The guide includes assistant configuration, optional hosted API mode, tests, and explicit privacy and authorization limits.

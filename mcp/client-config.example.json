@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "clera": {
+      "command": "node",
+      "args": ["C:/absolute/path/to/clinic-scheduler/build/mcp/index.js"],
+      "env": {
+        "MCP_MODE": "sample"
+      }
+    }
+  }
+}
